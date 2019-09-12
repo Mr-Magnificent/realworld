@@ -1,0 +1,13 @@
+{
+  "name": "realworld-one",
+  "version": "1.0.0",
+  "description": "Realworld-one task",
+  "main": "index.js",
+  "repository": "git@github.com:Mr-Magnificent/realworld.git",
+  "author": "Ayush Poddar <ayush_poddar@live.com>",
+  "license": "MIT",
+  "dependencies": {
+    "debug": "^4.1.1",
+    "express": "^4.17.1"
+  }
+}
