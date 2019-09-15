@@ -1,0 +1,4 @@
+DATABASE_URL=postgresql://postgres@localhost:5432/postgres
+KEY=$RANDOMSECUREKEY$
+SALT_ROUNDS=2
+NODE_ENV=dev

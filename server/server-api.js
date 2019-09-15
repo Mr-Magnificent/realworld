@@ -14,7 +14,7 @@ const debug = require('debug')('app:');
 
 app.use(compression());
 app.use(morgan('combined'));
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/api', routes);
 
