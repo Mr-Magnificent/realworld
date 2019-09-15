@@ -1,11 +1,12 @@
 {
     "env": {
         "browser": true,
-        "node": true,
-        "commonjs": true,
         "es6": true
     },
-    "extends": "eslint:recommended",
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended"
+    ],
     "globals": {
         "Atomics": "readonly",
         "SharedArrayBuffer": "readonly"
@@ -14,7 +15,8 @@
         "ecmaFeatures": {
             "jsx": true
         },
-        "ecmaVersion": 2018
+        "ecmaVersion": 2018,
+        "sourceType": "module"
     },
     "plugins": [
         "react"
@@ -36,12 +38,7 @@
             "error",
             "always"
         ],
-        "eol-last": [
-            "error",
-            "always"
-        ],
-        "prefer-template": [
-            "error"
-        ]
+        "react/jsx-uses-react": "error",
+        "react/jsx-uses-vars": "error"
     }
 }
