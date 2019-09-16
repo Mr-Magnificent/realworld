@@ -9,7 +9,7 @@ router.post('/login', LoginController.login);
 
 router.get('/checkusername', UserController.checkUsername);
 
-router.use(Authentication);
+router.use(Authentication.auth);
 
 router.get('/test', (req, res)=> {
 	res.send('got it');

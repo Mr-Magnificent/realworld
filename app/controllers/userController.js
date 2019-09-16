@@ -1,11 +1,10 @@
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
-const debug = require('debug')('app');
+const debug = require('debug')('app:');
 const randomstring = require('randomstring');
 const { signup } = require('../config/validations');
 
 exports.createUser = async (req, res) => {
-
 	// @hapi/joi validations
 	let validated = signup.validate(req.body);
 	debug.extend('validate')(validated);
@@ -48,7 +47,15 @@ exports.createUser = async (req, res) => {
 };
 
 exports.checkUsername = async (req, res) => {
-	const available = UsernameIsAvail(req.query.username);
+	let available;
+	try {
+		available = await UsernameIsAvail(req.query.username);
+	} catch(err) {
+		return res.status(500).send({
+			message: err.message
+		});
+	}
+
 	if (available) {
 		return res.send({
 			available: true
@@ -83,14 +90,15 @@ exports.toggleLive = async (req, res) => {
 
 const UsernameIsAvail = async (username) => {
 	try {
-		const data = await User.query().findOne({
-			username: username
-		});
+		const data = await User.query()
+			.findOne({
+				username: username
+			});
 		if (!data) {
 			return true;
 		}
 		return false;
 	} catch (err) {
-		return false;
+		throw Error(err.message);
 	}
 };
