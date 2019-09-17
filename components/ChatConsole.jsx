@@ -5,49 +5,12 @@ import axios from 'axios';
 import qs from 'querystring';
 import Cookies from 'js-cookie';
 import { string } from 'prop-types';
+
 import RandomString from 'randomstring';
+import { MessageBox } from 'react-chat-elements';
+import { Picker } from 'emoji-mart';
 import 'react-chat-elements/dist/main.css';
-import { MessageBox, SideBar } from 'react-chat-elements';
-
-function chatBox(props, recv) {
-	let alignProp = 'flex-end';
-	let borderRadius = '30px 15px 5px 30px';
-	let backgroundColour = '#a0cbfc';
-	let textAlign = 'end';
-
-	if (recv === true) {
-		alignProp = 'flex-start';
-		borderRadius = '15px 30px 30px 5px';
-		backgroundColour = 'grey';
-		textAlign = 'start';
-	}
-
-	return (
-		<div style={{
-			alignSelf: alignProp,
-			backgroundColor: backgroundColour,
-			minWidth: '500px',
-			maxWidth: '700px',
-			margin: '20px',
-			borderRadius: borderRadius
-		}}>
-			<div style={{ padding: '15px 20px', textAlign }}>
-				<span style={{
-					fontWeight: '800',
-					fontSize: '18px',
-				}}>
-					{props.name}
-				</span>
-			</div>
-			<div style={{
-				padding: '15px 20px',
-				textAlign
-			}}>
-				{props.message}
-			</div>
-		</div>
-	);
-}
+import 'emoji-mart/css/emoji-mart.css';
 
 function chatMessage(props, recv) {
 	// settings for my messages
@@ -64,7 +27,7 @@ function chatMessage(props, recv) {
 			titleColor='red'
 			title={props.name}
 			data={RandomString.generate(10)}
-			text={RandomString.generate(10)}
+			text={props.message}
 		/>
 	);
 }
@@ -78,8 +41,14 @@ chatMessage.propTypes = {
 class ChatConsole extends React.Component {
 	state = {
 		endpoint: '',
-		chats: []
+		chats: [],
+		onlineUsers: []
 	}
+
+	searchbox = React.createRef();
+	messageBox = React.createRef();
+
+	_socket;
 
 	async componentDidMount() {
 		try {
@@ -94,7 +63,6 @@ class ChatConsole extends React.Component {
 		}
 		for (let i = 0; i < 10; i++) {
 			let datas = {
-				chatId: i,
 				name: RandomString.generate(10),
 				message: 'this is a message'
 			};
@@ -125,33 +93,81 @@ class ChatConsole extends React.Component {
              * TODO: add sentiment
              */
 			socket.emit();
-			socket.on('chat', (data) => {
+			socket.on('message', (data) => {
+				console.log('message', data);
 				const box = chatMessage(data, true);
 				this.setState({
 					chats: [...this.state.chats, box]
 				});
 			});
-			socket.on();
+
+			socket.on('sentiment', (data) => {
+				console.log(data);
+			});
+
+			socket.on('online', (data) => {
+				console.log(data);
+			});
 		});
+
+		this._socket = socket;
+	}
+
+	addEmoji = (emoji) => {
+		console.log(emoji);
+		console.log(this.searchbox.current.value);
+		this.searchbox.current.value += emoji.native;
+	}
+
+	componentDidUpdate() {
+		this.scrollDiv();
+	}
+
+	sendMessage = (event) => {
+		if (event.keyCode == 13 || event.which == 13) {
+
+			const textInput = this.searchbox.current.value;
+
+			let socket = this._socket;
+			console.log('socket', socket);
+			socket.emit('message', textInput);
+
+			let data = {
+				name: 'me',
+				message: textInput
+			};
+
+			const box = chatMessage(data, false);
+			this.setState({
+				chats: [...this.state.chats, box]
+			});
+
+			this.searchbox.current.value = '';
+			return false;
+		}
+		return true;
+	}
+
+	scrollDiv = () => {
+		this.messageBox.current.scrollTop = this.messageBox.current.scrollHeight;
 	}
 
 	render() {
 		return (
 			<div style={{ background: '#fff', padding: 24, minHeight: 280 }}>
-				{/* <div style={{
-					overflowX: 'scroll',
-					display: 'flex',
-					width: '100%',
-					maxHeight: '33rem',
-					flexDirection: 'column'
-				}}>
-					{chatArr}
+				<div style={{
+					overflowY: 'scroll',
+					height: '30em'
+				}} ref={this.messageBox}
+				>
+					{this.state.chats}
 				</div>
 				<div>
-					<div></div>
-					<div></div>
-				</div> */}
-				{this.state.chats}
+					<div>
+						<input ref={this.searchbox} onKeyUp={this.sendMessage} autoFocus></input>
+					</div>
+					<div style={{ zIndex: 1 }}><Picker onSelect={this.addEmoji} /></div>
+				</div>
 			</div>
 		);
 	}

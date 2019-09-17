@@ -24,6 +24,7 @@ exports.auth = async (req, res, next) => {
 
 exports.verifyToken = async (token) => {
 	try {
+		token = token.split(' ')[1];
 		debug.extend('token')(token);
 		const decoded = await verify(token, process.env.KEY);
 		return decoded;
