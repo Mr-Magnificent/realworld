@@ -1,6 +1,9 @@
 import React from 'react';
 import App from 'next/app';
 import 'antd/dist/antd.css';
+import axios from 'axios';
+
+axios.defaults.baseURL = '/api/';
 
 class Layout extends React.Component {
 	render () {

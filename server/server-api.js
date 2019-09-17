@@ -12,12 +12,14 @@ require('../app/config/database');
 const routes = require('../routes/api');
 
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const debug = require('debug')('app:');
 
 app.use(compression());
 app.use(morgan('combined'));
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app.use('/api', routes);
 

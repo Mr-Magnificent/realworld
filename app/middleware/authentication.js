@@ -6,7 +6,7 @@ const verify = promisify(jwt.verify);
 const User = require('../models/User');
 
 exports.auth = async (req, res, next) => {
-	let token = req.headers['authorization'];
+	let token = req.cookies.token;
 	if (!token) {
 		return res.status(401).send({ message: 'Token not present' });
 	}

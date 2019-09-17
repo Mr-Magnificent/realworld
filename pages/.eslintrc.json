@@ -37,7 +37,6 @@
             "always"
         ],
         "react/jsx-uses-react": "error",
-        "react/jsx-uses-vars": "error",
-        "strict": 0
+        "react/jsx-uses-vars": "error"
     }
 }

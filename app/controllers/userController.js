@@ -4,6 +4,20 @@ const debug = require('debug')('app:');
 const randomstring = require('randomstring');
 const { signup } = require('../config/validations');
 
+exports.me = async(req, res) => {
+	try {
+		const user = await User.query()
+			.select('username', 'email', 'name')
+			.findById(req.user.id);
+
+		return res.send(user);
+	} catch (err) {
+		return res.status(500).send({
+			message: err.message
+		});
+	}
+};
+
 exports.createUser = async (req, res) => {
 	// @hapi/joi validations
 	let validated = signup.validate(req.body);

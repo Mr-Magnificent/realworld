@@ -1,13 +1,14 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const debug = require('debug')('login');
+const debug = require('debug')('app:');
 
 const User = require('../models/User');
 const validations = require('../config/validations');
 
-exports.login = async (req, res, next) => {
+exports.login = async (req, res) => {
 
 	// @hapi/joi validations
+	debug.extend('body')(req.body);
 	const validated = validations.login.validate(req.body);
 	if (validated.error) {
 		return res.status(400).send({

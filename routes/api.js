@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const ip = require('ip');
 
 const UserController = require('../app/controllers/userController');
 const LoginController = require('../app/controllers/login');
@@ -10,6 +11,12 @@ router.post('/login', LoginController.login);
 router.get('/checkusername', UserController.checkUsername);
 
 router.use(Authentication.auth);
+
+router.get('/me', UserController.me);
+
+router.get('/ipaddr', (req, res) => {
+	res.send(`${ip.address()}:${process.env.PORT || 3000}`);
+});
 
 router.get('/test', (req, res)=> {
 	res.send('got it');
