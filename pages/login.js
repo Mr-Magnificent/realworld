@@ -1,8 +1,11 @@
+/* eslint-disable no-console */
 import React from 'react';
-import { Form, Icon, Input, Button, Typography } from 'antd';
+import { Form, Icon, Input, Button, Typography, message } from 'antd';
 import Link from 'next/link';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+
+import Router from 'next/router';
 
 const { Title } = Typography;
 
@@ -11,13 +14,21 @@ class Login extends React.Component {
 		e.preventDefault();
 		this.props.form.validateFields(async (err, values) => {
 			if (!err) {
-
-				const { data } = await axios.post('/login', {
-					email: values.email,
-					password: values.password
-				});
-				// console.log(data);
-				Cookies.set('token', `Bearer ${data.token}`);
+				let alert;
+				try {
+					alert = message.loading('Sign in');
+					const { data } = await axios.post('/login', {
+						email: values.email,
+						password: values.password
+					});
+					Cookies.set('token', data.token);
+					alert.then(() => message.success('Successfully Signed in'));
+					Router.push('/');
+					
+				} catch (err) {
+					alert.then(() => message.error('Something went wrong'));
+					console.log(err);
+				}
 			}
 		});
 	};

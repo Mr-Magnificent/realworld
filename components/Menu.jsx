@@ -1,14 +1,16 @@
 import React from 'react';
-import { Menu, Icon, Dropdown } from 'antd';
 import Cookies from 'js-cookie';
 import { string } from 'prop-types';
+import { Menu, Icon, Dropdown } from 'antd';
 
 function menuOptions() {
 	function logout() {
 		Cookies.remove('token');
+		this.forceUpdate();
 	}
+
 	return (
-		<Menu style={{display: 'flex', flexDirection: 'row-reverse'}}>
+		<Menu>
 			<Menu.Item>
 				<div onClick={logout}>Logout <Icon type="logout" /></div>
 			</Menu.Item>
@@ -25,13 +27,13 @@ class AppMenu extends React.Component {
 
 	render() {
 		return (
-			<React.Fragment>
+			<div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-end'}}>
 				<Dropdown overlay={menuOptions}>
 					<a>
 						{this.props.user} <Icon type="down" />
 					</a>
 				</Dropdown>
-			</React.Fragment>
+			</div>
 		);
 	}
 }

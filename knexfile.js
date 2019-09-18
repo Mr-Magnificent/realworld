@@ -4,7 +4,7 @@ require('dotenv').config();
 module.exports = {
 	dev: {
 		client: 'pg',
-		connection: process.env.DATABASE_URL,
+		connection: `${process.env.DATABASE_URL}?ssl=true`,
 		searchPath: ['user','public'],
 		pool: {
 			min: 2,

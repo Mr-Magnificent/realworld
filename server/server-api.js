@@ -4,7 +4,7 @@ const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 
-require('../app/socket/index')(io);
+require('../routes/socket/index')(io);
 
 require('dotenv').config;
 require('../app/config/database');

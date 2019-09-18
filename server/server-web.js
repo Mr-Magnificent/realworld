@@ -19,7 +19,7 @@ nextApp.prepare()
 		const server = require('http').createServer(app);
 		const io = require('socket.io')(server);
 
-		require('../app/socket/index')(io);
+		require('../routes/socket/index')(io);
 
 		require('../app/config/database');
 

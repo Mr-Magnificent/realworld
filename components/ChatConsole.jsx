@@ -5,8 +5,11 @@ import axios from 'axios';
 import qs from 'querystring';
 import Cookies from 'js-cookie';
 import { string } from 'prop-types';
-
 import RandomString from 'randomstring';
+
+import Online from './Online';
+
+import { Button } from 'antd';
 import { MessageBox } from 'react-chat-elements';
 import { Picker } from 'emoji-mart';
 import 'react-chat-elements/dist/main.css';
@@ -15,7 +18,6 @@ import 'emoji-mart/css/emoji-mart.css';
 function chatMessage(props, recv) {
 	// settings for my messages
 	let position = 'right';
-
 
 	// if the message is others
 	if (recv == true) {
@@ -42,7 +44,8 @@ class ChatConsole extends React.Component {
 	state = {
 		endpoint: '',
 		chats: [],
-		onlineUsers: []
+		onlineUsers: [],
+		emojiVisible: false
 	}
 
 	searchbox = React.createRef();
@@ -61,23 +64,12 @@ class ChatConsole extends React.Component {
 		} catch (err) {
 			console.log(err);
 		}
-		for (let i = 0; i < 10; i++) {
-			let datas = {
-				name: RandomString.generate(10),
-				message: 'this is a message'
-			};
 
-			let toggle = false;
-			if (i % 2 == 0) {
-				toggle = true;
-			}
-			const boxs = chatMessage(datas, toggle);
-			console.log(boxs);
-			this.setState({
-				chats: [...this.state.chats, boxs]
-			});
-		}
 		await this.connectSocket();
+	}
+
+	componentDidUpdate() {
+		this.scrollDiv();
 	}
 
 	connectSocket = async () => {
@@ -87,12 +79,7 @@ class ChatConsole extends React.Component {
 		socket.on('connect', () => {
 			console.log(`Socket Connected: ${socket.connected}`);
 
-    		/**
-             * TODO: send message
-             * TODO: recv message
-             * TODO: add sentiment
-             */
-			socket.emit();
+			// socket events
 			socket.on('message', (data) => {
 				console.log('message', data);
 				const box = chatMessage(data, true);
@@ -101,51 +88,59 @@ class ChatConsole extends React.Component {
 				});
 			});
 
-			socket.on('sentiment', (data) => {
-				console.log(data);
-			});
-
 			socket.on('online', (data) => {
-				console.log(data);
+				console.log('online', data);
+				this.setState({
+					onlineUsers: data
+				});
 			});
 		});
 
 		this._socket = socket;
 	}
 
+	// Add selected emoji to inputbox
 	addEmoji = (emoji) => {
-		console.log(emoji);
 		console.log(this.searchbox.current.value);
 		this.searchbox.current.value += emoji.native;
 	}
 
-	componentDidUpdate() {
-		this.scrollDiv();
-	}
 
-	sendMessage = (event) => {
+	sendMessageEnter = (event) => {
 		if (event.keyCode == 13 || event.which == 13) {
-
-			const textInput = this.searchbox.current.value;
-
-			let socket = this._socket;
-			console.log('socket', socket);
-			socket.emit('message', textInput);
-
-			let data = {
-				name: 'me',
-				message: textInput
-			};
-
-			const box = chatMessage(data, false);
-			this.setState({
-				chats: [...this.state.chats, box]
-			});
-
-			this.searchbox.current.value = '';
-			return false;
+			this.sendMessage(event);
 		}
 		return true;
+	}
+
+	sendMessage = () => {
+		const textInput = this.searchbox.current.value;
+		if (textInput === '') {
+			return false;
+		}
+
+		let socket = this._socket;
+		console.log('socket', socket);
+		socket.emit('message', textInput);
+
+		let data = {
+			name: 'me',
+			message: textInput
+		};
+
+		const box = chatMessage(data, false);
+		this.setState({
+			chats: [...this.state.chats, box]
+		});
+
+		this.searchbox.current.value = '';
+		return false;
+	}
+
+	ToggleEmojiPicker = () => {
+		this.setState({
+			emojiVisible: !this.state.emojiVisible
+		});
 	}
 
 	scrollDiv = () => {
@@ -155,18 +150,37 @@ class ChatConsole extends React.Component {
 	render() {
 		return (
 			<div style={{ background: '#fff', padding: 24, minHeight: 280 }}>
-				<div style={{
-					overflowY: 'scroll',
-					height: '30em'
-				}} ref={this.messageBox}
-				>
-					{this.state.chats}
-				</div>
-				<div>
-					<div>
-						<input ref={this.searchbox} onKeyUp={this.sendMessage} autoFocus></input>
+				<div style={{ display: 'flex', flexWrap: 'no-wrap' }}>
+					<div style={{
+						overflowY: 'scroll',
+						height: '30em',
+						flexBasis: '75%'
+					}} ref={this.messageBox}
+					>
+						{this.state.chats}
 					</div>
-					<div style={{ zIndex: 1 }}><Picker onSelect={this.addEmoji} /></div>
+					<div style={{ flexBasis: '25%' }}>
+						<Online online={this.state.onlineUsers} />
+					</div>
+				</div>
+				<div style={{ display: 'flex', flexWrap: 'wrap' }}>
+					<div style={{ width: '60%' }}>
+						<input
+							style={{ width: '100%' }}
+							ref={this.searchbox}
+							placeholder='Enter your message'
+							onKeyUp={this.sendMessageEnter}
+							autoFocus
+						>
+						</input>
+					</div>
+					&nbsp;
+					<Button type="primary" icon="caret-right" onClick={this.sendMessage} style={{ width: '5%', minWidth: '50px' }} />
+					&nbsp;
+					<Button type="secondary" icon="smile" onClick={this.ToggleEmojiPicker} style={{ width: '5%', minWidth: '50px' }} />
+					<div>
+						{this.state.emojiVisible ? (<Picker onSelect={this.addEmoji} />) : (<></>)}
+					</div>
 				</div>
 			</div>
 		);

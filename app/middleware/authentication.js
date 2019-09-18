@@ -10,7 +10,6 @@ exports.auth = async (req, res, next) => {
 	if (!token) {
 		return res.status(401).send({ message: 'Token not present' });
 	}
-	token = token.split(' ')[1];
 	try {
 		const decoded = await this.verifyToken(token);
 		debug.extend('auth')(decoded);
@@ -24,7 +23,6 @@ exports.auth = async (req, res, next) => {
 
 exports.verifyToken = async (token) => {
 	try {
-		token = token.split(' ')[1];
 		debug.extend('token')(token);
 		const decoded = await verify(token, process.env.KEY);
 		return decoded;

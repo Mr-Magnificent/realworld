@@ -7,6 +7,7 @@ import {
 	Button,
 	Typography
 } from 'antd';
+import Router from 'next/router';
 
 const Title = Typography.Title;
 
@@ -21,7 +22,7 @@ class RegistrationForm extends React.Component {
 		e.preventDefault();
 		this.props.form.validateFieldsAndScroll((err, values) => {
 			if (!err) {
-				// console.log('Received values of form: ', values);
+				console.log('Received values of form: ', values);
 			}
 		});
 	};
@@ -87,7 +88,10 @@ class RegistrationForm extends React.Component {
 		return (
 			<div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', width: '100%', marginTop: '2%' }}>
 				<Title>Chat App Demo</Title>
-				<Form {...formItemLayout} style={{width: '60%'}} onSubmit={this.handleSubmit}>
+				<Form {...formItemLayout} style={{ width: '60%' }} onSubmit={this.handleSubmit}>
+					<Form.Item label="Name">
+						{getFieldDecorator('name')(<Input />)}
+					</Form.Item>
 					<Form.Item label="E-mail">
 						{getFieldDecorator('email', {
 							rules: [
