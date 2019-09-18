@@ -74,7 +74,7 @@ class ChatConsole extends React.Component {
 
 	connectSocket = async () => {
 		const token = Cookies.get('token');
-		const socket = io(`http://${this.state.endpoint}?${qs.stringify({ token })}`, { secure: true });
+		const socket = io(`https://${this.state.endpoint}?${qs.stringify({ token })}`, { secure: true });
 
 		socket.on('connect', () => {
 			console.log(`Socket Connected: ${socket.connected}`);
