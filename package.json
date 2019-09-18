@@ -44,10 +44,9 @@
     "eslint": "4.x"
   },
   "scripts": {
-    "start": "next start",
+    "start": "DEBUG=app:* nodemon server/server-web.js",
     "build": "next build",
     "dev": "npx next",
-    "api": "DEBUG=app:* nodemon server/server-api.js",
-    "web": "DEBUG=app:* nodemon server/server-web.js"
+    "api": "DEBUG=app:* nodemon server/server-api.js"
   }
 }
