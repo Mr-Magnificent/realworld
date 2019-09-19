@@ -12,5 +12,6 @@ Install the dependencies and devDependencies and start the server.
 $ cd realworld
 $ yarn install
 $ yarn migrate
+$ yarn build
 $ yarn start
 ```
