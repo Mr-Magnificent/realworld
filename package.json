@@ -49,6 +49,7 @@
   "scripts": {
     "start": "DEBUG=app:* nodemon server/server-web.js",
     "build": "next build",
+    "migrate": "knex migrate:latest",
     "dev": "npx next",
     "api": "DEBUG=app:* nodemon server/server-api.js"
   }
