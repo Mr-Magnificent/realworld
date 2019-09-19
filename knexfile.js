@@ -3,8 +3,8 @@ require('dotenv').config();
 
 module.exports = {
 	dev: {
-		client: 'pg',
-		connection: `${process.env.DATABASE_URL}?ssl=true`,
+		client: 'postgresql',
+		connection: `${process.env.DATABASE_URL}`,
 		searchPath: ['user','public'],
 		pool: {
 			min: 2,
@@ -14,18 +14,11 @@ module.exports = {
 
 	production: {
 		client: 'postgresql',
-		connection: {
-			database: 'my_db',
-			user:     'username',
-			password: 'password'
-		},
+		connection: `${process.env.DATABASE_URL}?ssl=true`,
+		searchPath: ['user','public'],
 		pool: {
 			min: 2,
 			max: 10
-		},
-		migrations: {
-			tableName: 'knex_migrations'
 		}
 	}
-
 };

@@ -51,7 +51,9 @@ export default class Index extends React.Component {
 	render() {
 		if (this.state.isLoading) {
 			return (
-				<Spin />
+				<div style={{ display: 'flex', justifyContent: 'center'}}>
+					<Spin />
+				</div>
 			);
 		}
 		return (

@@ -16,7 +16,6 @@ exports.login = async (req, res) => {
 		});
 	}
 
-
 	try {
 		const user = await User.query()
 			.first()

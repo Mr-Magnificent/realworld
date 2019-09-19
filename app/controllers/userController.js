@@ -31,14 +31,16 @@ exports.createUser = async (req, res) => {
 
 	const hashedPassword = await bcrypt.hash(req.body.password, parseInt(process.env.SALT_ROUNDS));
 
-	if (!UsernameIsAvail(req.body.username)) {
+	if (!await UsernameIsAvail(req.body.username)) {
 		return res.status(400).send({
 			message: 'invalid username'
 		});
 	}
 
+	debug.extend('after')('hello');
+
 	try {
-		await User.query()
+		const data = await User.query()
 			.insert({
 				email: req.body.email,
 				username: req.body.username,
@@ -47,6 +49,8 @@ exports.createUser = async (req, res) => {
 				socket_id: randomstring.generate(6),
 				is_live: false,
 			});
+
+		debug.extend('register data')(data);
 
 		res.status(200).send({
 			message: `${req.body.username} successfully created`,
@@ -104,15 +108,19 @@ exports.toggleLive = async (req, res) => {
 
 const UsernameIsAvail = async (username) => {
 	try {
+
 		const data = await User.query()
 			.findOne({
 				username: username
 			});
+
+		debug.extend('username Avail')(username);
 		if (!data) {
 			return true;
 		}
 		return false;
 	} catch (err) {
+		debug.extend('error')(err);
 		throw Error(err.message);
 	}
 };

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React from 'react';
 import {
 	Form,
@@ -5,9 +6,13 @@ import {
 	Tooltip,
 	Icon,
 	Button,
-	Typography
+	Typography,
+	message
 } from 'antd';
 import Router from 'next/router';
+import axios from 'axios';
+import Link from 'next/link';
+import { debounce } from 'debounce';
 
 const Title = Typography.Title;
 
@@ -20,9 +25,18 @@ class RegistrationForm extends React.Component {
 
 	handleSubmit = e => {
 		e.preventDefault();
-		this.props.form.validateFieldsAndScroll((err, values) => {
+		this.props.form.validateFieldsAndScroll(async (err, values) => {
 			if (!err) {
 				console.log('Received values of form: ', values);
+				try {
+					const { data } = await axios.post('/register', values);
+					console.log(data);
+					message.success('User successfully created');
+					Router.push('/login');
+				} catch (err) {
+					console.log(err);
+					message.error('Something went wrong');
+				}
 			}
 		});
 	};
@@ -45,6 +59,20 @@ class RegistrationForm extends React.Component {
 		const { form } = this.props;
 		if (value && this.state.confirmDirty) {
 			form.validateFields(['confirm'], { force: true });
+		}
+		callback();
+	};
+
+	validateUsername = (rule, value, callback) => {
+		console.log('helo validate');
+		debounce(async () => {
+			/**
+			 * TODO validate my username
+			 */
+		});
+		const { form } = this.props;
+		if (value && this.state.confirmDirty) {
+			form.validateFields(['username'], { force: true });
 		}
 		callback();
 	};
@@ -80,7 +108,7 @@ class RegistrationForm extends React.Component {
 				},
 				sm: {
 					span: 24,
-					offset: 10,
+					offset: 0,
 				},
 			},
 		};
@@ -103,6 +131,29 @@ class RegistrationForm extends React.Component {
 									required: true,
 									message: 'Please input your E-mail!',
 								},
+							],
+						})(<Input />)}
+					</Form.Item>
+					<Form.Item
+						label={
+							<span>
+								Username&nbsp;
+								<Tooltip title="What do you want others to call you?">
+									<Icon type="question-circle-o" />
+								</Tooltip>
+							</span>
+						}
+						hasFeedback={true}
+						validateStatus={this.showFeedback()}
+					>
+						{getFieldDecorator('username', {
+							rules: [
+								{
+									required: true, message: 'Please choose unique username!', whitespace: true
+								},
+								{
+									validator: this.validateUsername
+								}
 							],
 						})(<Input />)}
 					</Form.Item>
@@ -132,26 +183,13 @@ class RegistrationForm extends React.Component {
 							],
 						})(<Input.Password onBlur={this.handleConfirmBlur} />)}
 					</Form.Item>
-					<Form.Item
-						label={
-							<span>
-								Username&nbsp;
-								<Tooltip title="What do you want others to call you?">
-									<Icon type="question-circle-o" />
-								</Tooltip>
-							</span>
-						}
-						hasFeedback={true}
-						validateStatus={this.showFeedback()}
-					>
-						{getFieldDecorator('username', {
-							rules: [{ required: true, message: 'Please choose unique username!', whitespace: true }],
-						})(<Input />)}
-					</Form.Item>
 					<Form.Item {...tailFormItemLayout}>
-						<Button type="primary" htmlType="submit">
-							Register
-						</Button>
+						<div style={{ display: 'flex', justifyContent: 'space-around' }}>
+							<Button type="primary" htmlType="submit">
+								Register
+							</Button>
+							<span>Or <Link href='/login'><a title='login'>login now!</a></Link></span>
+						</div>
 					</Form.Item>
 				</Form>
 			</div>

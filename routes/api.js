@@ -14,10 +14,6 @@ router.use(Authentication.auth);
 
 router.get('/me', UserController.me);
 
-router.get('/ipaddr', (req, res) => {
-	res.send(`${ip.address()}:${process.env.PORT || 3000}`);
-});
-
 router.get('/test', (req, res)=> {
 	res.send('got it');
 });

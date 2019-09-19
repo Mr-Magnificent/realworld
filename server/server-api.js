@@ -16,6 +16,9 @@ const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const debug = require('debug')('app:');
 
+const httpToHttps = require('../app/middleware/httpToHttps');
+app.use(httpToHttps);
+
 app.use(compression());
 app.use(morgan('combined'));
 app.use(bodyParser.urlencoded({ extended: true }));

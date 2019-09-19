@@ -8,6 +8,7 @@ import { string } from 'prop-types';
 import RandomString from 'randomstring';
 
 import Online from './Online';
+// import WebRTC from './WebRTC';
 
 import { Button } from 'antd';
 import { MessageBox } from 'react-chat-elements';
@@ -45,7 +46,8 @@ class ChatConsole extends React.Component {
 		endpoint: '',
 		chats: [],
 		onlineUsers: [],
-		emojiVisible: false
+		emojiVisible: false,
+		videoChat: false
 	}
 
 	searchbox = React.createRef();
@@ -144,6 +146,12 @@ class ChatConsole extends React.Component {
 		});
 	}
 
+	ToggleVideo = () => {
+		this.setState({
+			videoChat: !this.state.videoChat
+		});
+	}
+
 	scrollDiv = () => {
 		this.messageBox.current.scrollTop = this.messageBox.current.scrollHeight;
 	}
@@ -151,6 +159,9 @@ class ChatConsole extends React.Component {
 	render() {
 		return (
 			<div style={{ background: '#fff', padding: 24, minHeight: 280 }}>
+				{/* <div>
+					{this.state.videoChat ? (<WebRTC />) : (<></>)}
+				</div> */}
 				<div style={{ display: 'flex', flexWrap: 'no-wrap' }}>
 					<div style={{
 						overflowY: 'scroll',
@@ -179,9 +190,12 @@ class ChatConsole extends React.Component {
 					<Button type="primary" icon="caret-right" onClick={this.sendMessage} style={{ width: '5%', minWidth: '50px' }} />
 					&nbsp;
 					<Button type="secondary" icon="smile" onClick={this.ToggleEmojiPicker} style={{ width: '5%', minWidth: '50px' }} />
+					{/* &nbsp;
+					<Button type="secondary" icon="video-camera" onClick={this.ToggleVideo} style={{ width: '5%', minWidth: '50px' }} /> */}
 					<div>
 						{this.state.emojiVisible ? (<Picker onSelect={this.addEmoji} />) : (<></>)}
 					</div>
+
 				</div>
 			</div>
 		);
