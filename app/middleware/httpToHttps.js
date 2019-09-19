@@ -5,6 +5,6 @@ module.exports = (req, res, next) => {
 		debug.extend('inside')('inside');
 		next();
 	} else {
-		res.redirect(301, `https://${req.headers.host}${req.url}`);
+		res.redirect(`https://${req.headers.host}${req.url}`);
 	}
 };
