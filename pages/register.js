@@ -72,7 +72,7 @@ class RegistrationForm extends React.Component {
 
 		try {
 			let { data } = await axios.get(`/checkusername?username=${value}`);
-			if (data.available) {
+			if (data.available && value !== '') {
 				this.setState({
 					validUsername: true
 				});
