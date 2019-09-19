@@ -1,8 +1,7 @@
 const debug = require('debug')('app:');
 module.exports = (req, res, next) => {
 	debug.extend('https')(process.env.NODE_ENV);
-	if (process.env.NODE_ENV === 'dev' || req.secure) {
-		debug.extend('inside')('inside');
+	if (req.secure) {
 		next();
 	} else {
 		res.redirect(`https://${req.headers.host}${req.url}`);
