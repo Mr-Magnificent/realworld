@@ -33,7 +33,6 @@ class RegistrationForm extends React.Component {
 				console.log('Received values of form: ', values);
 				try {
 					const { data } = await axios.post('/register', values);
-					console.log(data);
 					message.success('User successfully created');
 					Router.push('/login');
 				} catch (err) {
@@ -67,9 +66,6 @@ class RegistrationForm extends React.Component {
 	};
 
 	validateUsername = async (rule, value, callback) => {
-		console.log('helo validate');
-		console.log(value);
-
 		try {
 			let { data } = await axios.get(`/checkusername?username=${value}`);
 			if (data.available && value !== '') {

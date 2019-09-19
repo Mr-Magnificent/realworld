@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
 import React from 'react';
 import io from 'socket.io-client';
-import axios from 'axios';
 import qs from 'querystring';
 import Cookies from 'js-cookie';
 import { string } from 'prop-types';
@@ -178,7 +177,7 @@ class ChatConsole extends React.Component {
 					&nbsp;
 					<Button type="primary" icon="caret-right" onClick={this.sendMessage} style={{ width: '5%', minWidth: '50px' }} />
 					&nbsp;
-					<Button type="secondary" icon="smile" onClick={this.ToggleEmojiPicker} style={{ width: '5%', minWidth: '50px' }} />
+					<Button type="primary" icon="smile" onClick={this.ToggleEmojiPicker} style={{ width: '5%', minWidth: '50px' }} >Emoji</Button>
 					{/* &nbsp;
 					<Button type="secondary" icon="video-camera" onClick={this.ToggleVideo} style={{ width: '5%', minWidth: '50px' }} /> */}
 					<div>

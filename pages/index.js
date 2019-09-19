@@ -19,7 +19,6 @@ export default class Index extends React.Component {
 
 	checkLogin = () => {
 		let token = Cookies.get('token');
-		console.log(token);
 		if (!token) {
 			Router.push('/login');
 			return;
