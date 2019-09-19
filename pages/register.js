@@ -12,7 +12,6 @@ import {
 import Router from 'next/router';
 import axios from 'axios';
 import Link from 'next/link';
-import { debounce } from 'debounce';
 
 const Title = Typography.Title;
 
@@ -25,6 +24,10 @@ class RegistrationForm extends React.Component {
 
 	handleSubmit = e => {
 		e.preventDefault();
+		if (this.state.validUsername == false) {
+			message.error('Username already taken!');
+			return false;
+		}
 		this.props.form.validateFieldsAndScroll(async (err, values) => {
 			if (!err) {
 				console.log('Received values of form: ', values);
@@ -63,13 +66,24 @@ class RegistrationForm extends React.Component {
 		callback();
 	};
 
-	validateUsername = (rule, value, callback) => {
+	validateUsername = async (rule, value, callback) => {
 		console.log('helo validate');
-		debounce(async () => {
-			/**
-			 * TODO validate my username
-			 */
-		});
+		console.log(value);
+
+		try {
+			let { data } = await axios.get(`/checkusername?username=${value}`);
+			if (data.available) {
+				this.setState({
+					validUsername: true
+				});
+			} else {
+				this.setState({
+					validUsername: false
+				});
+			}
+		} catch (err) {
+			console.log(err);
+		}
 		const { form } = this.props;
 		if (value && this.state.confirmDirty) {
 			form.validateFields(['username'], { force: true });
@@ -155,6 +169,7 @@ class RegistrationForm extends React.Component {
 									validator: this.validateUsername
 								}
 							],
+							validateTrigger: 'onBlur'
 						})(<Input />)}
 					</Form.Item>
 					<Form.Item label="Password" hasFeedback>
@@ -163,6 +178,9 @@ class RegistrationForm extends React.Component {
 								{
 									required: true,
 									message: 'Please input your password!',
+								},
+								{
+									min: 8
 								},
 								{
 									validator: this.validateToNextPassword,
