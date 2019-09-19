@@ -25,8 +25,8 @@ nextApp.prepare()
 
 		const routes = require('../routes/api');
 
-		const httpToHttps = require('../app/middleware/httpToHttps');
-		app.use(httpToHttps);
+		// const httpToHttps = require('../app/middleware/httpToHttps');
+		// app.use(httpToHttps);
 
 
 		app.use(compression());
