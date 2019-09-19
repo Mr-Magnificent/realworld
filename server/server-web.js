@@ -25,10 +25,6 @@ nextApp.prepare()
 
 		const routes = require('../routes/api');
 
-		// const httpToHttps = require('../app/middleware/httpToHttps');
-		// app.use(httpToHttps);
-
-
 		app.use(compression());
 		app.use(morgan('combined'));
 		app.use(bodyParser.json());
