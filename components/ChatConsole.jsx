@@ -56,17 +56,6 @@ class ChatConsole extends React.Component {
 	_socket;
 
 	async componentDidMount() {
-		try {
-			const { data } = await axios.get('/ipaddr');
-			console.log(data);
-
-			this.setState({
-				endpoint: data
-			});
-		} catch (err) {
-			console.log(err);
-		}
-
 		await this.connectSocket();
 	}
 
