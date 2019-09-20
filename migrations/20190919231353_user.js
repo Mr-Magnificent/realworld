@@ -1,4 +1,4 @@
-const tableName = 'User';
+const tableName = 'user';
 exports.up = function (knex) {
 	return knex.schema.createTable(tableName, (t) => {
 		t.increments('id').primary();
@@ -6,7 +6,7 @@ exports.up = function (knex) {
 		t.string('email').notNullable();
 		t.string('password', 80).notNullable();
 		t.string('username').index().notNullable();
-		t.string('scoket_id').notNullable();
+		t.string('socket_id').notNullable();
 		t.boolean('is_live').defaultTo(false);
 		t.datetime('created_at').defaultTo(knex.fn.now(6));
 
